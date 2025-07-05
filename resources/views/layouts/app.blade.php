@@ -45,7 +45,7 @@
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #a0aec0;
-        }
+        } 
     </style>
     </head>
     <body class="font-sans antialiased">
