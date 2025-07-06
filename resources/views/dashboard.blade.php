@@ -90,20 +90,16 @@
                                 <i class="fas fa-times fa-lg"></i>
                             </button>
                 </div> --}}
-                <!-- Add/Edit Product Modal -->
-                <div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-40 hidden modal-overlay-bg opacity-0">
-                        <div id="modalContent" class="bg-white rounded-lg shadow-xl w-full max-w-2xl transform scale-95 opacity-0 modal-content overflow-y-auto max-h-[90vh]">
-                            <form id="productForm" class="p-6">
-                                <div class="flex justify-between items-center border-b pb-3 mb-4">
-                                    <h2 id="modalTitle" class="text-2xl font-bold text-gray-800">Agregar Producto</h2>
-                                    <button id="closeModal" type="button" class="text-gray-400 hover:text-gray-600">
-                                        <i class="fas fa-times fa-lg"></i>
-                                    </button>
-                                </div>
-                
-                        
+                <!-- Modal reutilizable -->
+                <x-modal name="product-modal">
+                    <form id="productForm" class="p-6">
+                        <div class="flex justify-between items-center border-b pb-3 mb-4">
+                            <h2 id="modalTitle" class="text-2xl font-bold text-gray-800">Agregar Producto</h2>
+                            <button id="closeModal" type="button" class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-times fa-lg"></i>
+                            </button>
+                        </div>
                         <input type="hidden" id="productId">
-
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="md:col-span-2">
                                 <label for="productName" class="block text-sm font-medium text-gray-700">Nombre del Producto</label>
@@ -131,18 +127,12 @@
                                 <input type="text" id="productImage" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500" placeholder="https://example.com/imagen.jpg">
                             </div>
                         </div>
-
                         <div class="mt-6 flex justify-end space-x-3">
                             <button type="button" id="cancelModalBtn" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">Cancelar</button>
                             <button type="submit" class="bg-pink-500 text-white px-4 py-2 rounded-lg hover:bg-pink-600">Guardar</button>
                         </div>
                     </form>
-                </div>
-            </div>
-            </div>
-        </div>
-    </div>
-</div>
+                </x-modal>
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('js/inventory.js') }}"></script>
     </div>

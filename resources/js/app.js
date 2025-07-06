@@ -36,9 +36,17 @@ Alpine.start();
             sidebar.classList.toggle('-translate-x-full');
             sidebarOverlay.classList.toggle('hidden');
         }
-        menuButton.addEventListener('click', toggleSidebar);
-        sidebarOverlay.addEventListener('click', toggleSidebar);
-        
+        if(menuButton) menuButton.addEventListener('click', toggleSidebar);
+        if(sidebarOverlay) sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // --- Modal Reutilizable Logic ---
+        const openReusableModal = (name) => {
+            window.dispatchEvent(new CustomEvent('open-modal', { detail: name }));
+        };
+        const closeReusableModal = (name) => {
+            window.dispatchEvent(new CustomEvent('close-modal', { detail: name }));
+        };
+
         // --- Functions ---
         const getStatusBadge = (stock) => {
             if (stock === 0) return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Agotado</span>';
@@ -176,13 +184,16 @@ Alpine.start();
         };
 
         // --- Event Listeners ---
-        addProductBtn.addEventListener('click', showAddModal);
-        closeModalBtn.addEventListener('click', closeModal);
-        cancelModalBtn.addEventListener('click', closeModal);
-        productForm.addEventListener('submit', handleFormSubmit);
-        
-        document.addEventListener('keydown', (e) => e.key === "Escape" && !productModal.classList.contains('hidden') && closeModal());
-        productModal.addEventListener('click', (e) => e.target === productModal && closeModal());
+        // --- Modal Event Listeners ---
+        if(addProductBtn) {
+            addProductBtn.addEventListener('click', () => {
+                showAddModal();
+                openReusableModal('product-modal');
+            });
+        }
+        if(closeModalBtn) closeModalBtn.addEventListener('click', () => closeReusableModal('product-modal'));
+        if(cancelModalBtn) cancelModalBtn.addEventListener('click', () => closeReusableModal('product-modal'));
+        if(productForm) productForm.addEventListener('submit', handleFormSubmit);
 
         // --- Initial Load ---
         renderTable();
