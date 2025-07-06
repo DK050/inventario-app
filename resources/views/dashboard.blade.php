@@ -1,49 +1,60 @@
 <x-app-layout>
     <x-slot name="header">
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
-            <header class="h-16 bg-white border-b flex items-center justify-between px-4 sm:px-6">
+        <div class="flex items-center justify-between">
+            <h2 class="text-xl font-semibold text-gray-800">Gestión de Inventario</h2>
+            <div class="flex items-center space-x-4">
+                <button class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-bell"></i>
+                </button>
                 <div class="flex items-center">
-                    <!-- Mobile Menu Button -->
-                    <button id="menu-button" class="md:hidden mr-3 text-gray-600 hover:text-gray-800">
-                        <i class="fas fa-bars fa-lg"></i>
-                    </button>
-                    <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Gestión de Inventario</h2>
+                    <img class="h-8 w-8 rounded-full object-cover" src="https://placehold.co/100x100/f8b4b4/ffffff?text=A" alt="Admin Avatar">
+                    <span class="hidden sm:inline ml-2 text-sm font-medium">Admin</span>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <button class="text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-bell"></i>
-                    </button>
-                    <div class="flex items-center">
-                        <img class="h-8 w-8 rounded-full object-cover" src="https://placehold.co/100x100/f8b4b4/ffffff?text=A" alt="Admin Avatar">
-                        <span class="hidden sm:inline ml-2 text-sm font-medium">Admin</span>
-                    </div>
-                </div>
-            </header>
+            </div>
+        </div>
     </x-slot>
-
-    <div class="py-12">
-    <div class="w-full px-4 sm:px-6 lg:px-8">
-        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 text-gray-900 dark:text-gray-100">
-                {{-- TODO EL CONTENIDO DE TUS CARDS, TABLA Y MODALES VA AQUÍ --}}
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                    <div class="bg-white p-5 rounded-lg shadow">
-                        <h4 class="text-gray-500">Total de Productos</h4>
-                            <p id='total-productos' class="text-3xl font-bold text-gray-800">0</p>
-                    </div>
-                    <div class="bg-white p-5 rounded-lg shadow">
-                        <h4 class="text-gray-500">Categorías</h4>
-                            <p id='total-categorias' class="text-3xl font-bold text-gray-800">0</p>
-                    </div>
-                    <div class="bg-white p-5 rounded-lg shadow">
-                        <h4 class="text-gray-500">Poco Stock</h4>
-                            <p id='poco-stock' class="text-3xl font-bold text-yellow-500">0</p>
-                    </div>
-                    <div class="bg-white p-5 rounded-lg shadow">
-                        <h4 class="text-gray-500">Agotados</h4>
-                            <p id='agotados' class="text-3xl font-bold text-red-500">0</p>
+    <div class="py-8 px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <!-- Card: Total de Productos -->
+            <div class="flex items-center bg-green-50 p-5 rounded-lg shadow border border-green-100">
+                <div class="flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center bg-green-100">
+                    <i class="fas fa-box fa-lg text-green-500"></i>
+                </div>
+                <div class="ml-4">
+                    <h4 class="text-sm font-medium text-green-700">Total de Productos</h4>
+                    <p id='total-productos' class="text-3xl font-bold text-green-900 leading-tight">0</p>
+                </div>
+            </div>
+            <!-- Card: Categorías -->
+            <div class="flex items-center bg-blue-50 p-5 rounded-lg shadow border border-blue-100">
+                <div class="flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center bg-blue-100">
+                    <i class="fas fa-tags fa-lg text-blue-500"></i>
+                </div>
+                <div class="ml-4">
+                    <h4 class="text-sm font-medium text-blue-700">Categorías</h4>
+                    <p id='total-categorias' class="text-3xl font-bold text-blue-900 leading-tight">0</p>
+                </div>
+            </div>
+            <!-- Card: Poco Stock -->
+            <div class="flex items-center bg-yellow-50 p-5 rounded-lg shadow border border-yellow-100">
+                <div class="flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center bg-yellow-100">
+                    <i class="fas fa-exclamation-triangle fa-lg text-yellow-500"></i>
+                </div>
+                <div class="ml-4">
+                    <h4 class="text-sm font-medium text-yellow-700">Poco Stock</h4>
+                    <p id='poco-stock' class="text-3xl font-bold text-yellow-700 leading-tight">0</p>
+                </div>
+            </div>
+            <!-- Card: Agotados -->
+            <div class="flex items-center bg-red-50 p-5 rounded-lg shadow border border-red-100">
+                <div class="flex-shrink-0 h-12 w-12 rounded-full flex items-center justify-center bg-red-100">
+                    <i class="fas fa-times-circle fa-lg text-red-500"></i>
+                </div>
+                <div class="ml-4">
+                    <h4 class="text-sm font-medium text-red-700">Agotados</h4>
+                    <p id='agotados' class="text-3xl font-bold text-red-700 leading-tight">0</p>
+                </div>
+            </div>
                     </div>
 
                     <div class="bg-white rounded-lg shadow overflow-hidden">
