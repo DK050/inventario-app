@@ -8,15 +8,23 @@ Alpine.start();
 // --- INVENTORY MANAGEMENT APP ---
 // File: resources/js/inventory.js
     document.addEventListener('DOMContentLoaded', () => {
-        // --- MOCK DATA ---
-        let inventory = [
-            { id: 1, name: 'Set de Stickers Florales', category: 'Papelería', price: 5.99, stock: 45, image: 'https://placehold.co/100x100/dcfce7/16a34a?text=Stickers' },
-            { id: 2, name: 'Taza Personalizada "Te Quiero"', category: 'Regalos', price: 12.50, stock: 20, image: 'https://placehold.co/100x100/fecdd3/ef4444?text=Taza' },
-            { id: 3, name: 'Guirnalda de Luces LED', category: 'Adornos', price: 8.00, stock: 8, image: 'https://placehold.co/100x100/fef08a/ca8a04?text=Luces' },
-            { id: 4, name: 'Maqueta Sistema Solar', category: 'Maquetas', price: 25.00, stock: 5, image: 'https://placehold.co/100x100/bfdbfe/3b82f6?text=Maqueta' },
-            { id: 5, name: 'Libreta de Puntos A5', category: 'Papelería', price: 7.25, stock: 60, image: 'https://placehold.co/100x100/dcfce7/16a34a?text=Libreta' },
-            { id: 6, name: 'Caja Sorpresa de Cumpleaños', category: 'Regalos', price: 30.00, stock: 0, image: 'https://placehold.co/100x100/fecdd3/ef4444?text=Caja' },
-        ];
+        // --- INVENTORY DATA FROM API ---
+        let inventory = [];
+
+        // Helper: Get API base URL
+        const getApiUrl = (path) => `${window.location.origin}/api${path}`;
+
+        // Cargar productos desde la API
+        const fetchProducts = async () => {
+            try {
+                const res = await fetch(getApiUrl('/products'));
+                if (!res.ok) throw new Error('Error al cargar productos');
+                inventory = await res.json();
+                renderTable();
+            } catch (err) {
+                tableBody.innerHTML = `<tr><td colspan="6" class="text-center p-6 text-red-500">Error al cargar productos</td></tr>`;
+            }
+        };
 
         // --- DOM Elements ---
         const sidebar = document.getElementById('sidebar');
@@ -120,7 +128,7 @@ Alpine.start();
             productForm.reset();
             document.getElementById('productId').value = '';
             modalTitle.textContent = 'Agregar Nuevo Producto';
-            openModal();
+            openReusableModal('product-modal');
         };
 
         const showEditModal = (id) => {
@@ -133,11 +141,11 @@ Alpine.start();
                 document.getElementById('productStock').value = product.stock;
                 document.getElementById('productImage').value = product.image;
                 modalTitle.textContent = 'Editar Producto';
-                openModal();
+                openReusableModal('product-modal');
             }
         };
         
-        const handleFormSubmit = (e) => {
+        const handleFormSubmit = async (e) => {
             e.preventDefault();
             const id = document.getElementById('productId').value;
             const productData = {
@@ -148,22 +156,43 @@ Alpine.start();
                 image: document.getElementById('productImage').value || 'https://placehold.co/100x100/e0e0e0/ffffff?text=Img'
             };
 
-            if (id) { // Editing
-                const index = inventory.findIndex(p => p.id == id);
-                inventory[index] = { ...inventory[index], ...productData };
-            } else { // Adding
-                const newId = inventory.length > 0 ? Math.max(...inventory.map(p => p.id)) + 1 : 1;
-                inventory.unshift({ id: newId, ...productData }); // Add to the top
+            try {
+                let res;
+                if (id) {
+                    // Editar producto
+                    res = await fetch(getApiUrl(`/products/${id}`), {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(productData)
+                    });
+                } else {
+                    // Crear producto
+                    res = await fetch(getApiUrl('/products'), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(productData)
+                    });
+                }
+                if (!res.ok) throw new Error('Error al guardar producto');
+                closeReusableModal('product-modal');
+                await fetchProducts();
+            } catch (err) {
+                alert('Error al guardar producto');
             }
-            
-            closeModal();
-            renderTable();
         };
 
-        const deleteProduct = (id) => {
+        const deleteProduct = async (id) => {
             if(confirm('¿Estás seguro de que quieres eliminar este producto?')) {
-                inventory = inventory.filter(p => p.id !== id);
-                renderTable();
+                try {
+                    const res = await fetch(getApiUrl(`/products/${id}`), {
+                        method: 'DELETE',
+                        headers: { 'Accept': 'application/json' }
+                    });
+                    if (!res.ok) throw new Error('Error al eliminar producto');
+                    await fetchProducts();
+                } catch (err) {
+                    alert('Error al eliminar producto');
+                }
             }
         };
         
@@ -196,6 +225,6 @@ Alpine.start();
         if(productForm) productForm.addEventListener('submit', handleFormSubmit);
 
         // --- Initial Load ---
-        renderTable();
+        fetchProducts();
     });
     
