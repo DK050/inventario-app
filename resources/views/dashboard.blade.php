@@ -134,6 +134,6 @@
                     </form>
                 </x-modal>
     <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/inventory.js') }}"></script>
+    {{-- <script src="{{ asset('js/inventory.js') }}"></script> --}}
     </div>
 </x-app-layout>
