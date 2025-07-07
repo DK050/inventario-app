@@ -11,8 +11,10 @@ Alpine.start();
         // --- INVENTORY DATA FROM API ---
         let inventory = [];
 
-        // Helper: Get API base URL
-        const getApiUrl = (path) => `${window.location.origin}/api${path}`;
+        // Helper: Get API base URL (ajustado para desarrollo Vite + backend Laravel)
+        // Cambia la URL si tu backend corre en otro host/puerto
+        const API_BASE = 'http://localhost:8000/api'; // Cambia el puerto si usas otro
+        const getApiUrl = (path) => `${API_BASE}${path}`;
 
         // Cargar productos desde la API
         const fetchProducts = async () => {
