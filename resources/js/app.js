@@ -6,40 +6,43 @@ Alpine.start();
 
 // --- INVENTORY MANAGEMENT APP ---
 document.addEventListener('DOMContentLoaded', () => {
-    let inventory = [];
-
-    // ✅ CORRECCIÓN: Simplificamos el helper de la URL. Ya no es necesario.
-    const getApiUrl = (path) => path;
+    let inventory = window.initialProducts || [];
 
     const fetchProducts = async () => {
         try {
-            // Usamos la ruta web '/products' que apunta al método 'index' del controlador
-            const res = await fetch(getApiUrl('/products'));
-            if (!res.ok) throw new Error('Error al cargar productos');
+            // ✅ LA CORRECCIÓN FINAL ESTÁ AQUÍ
+            // Añadimos la cabecera 'Accept' para decirle explícitamente
+            // a Laravel que queremos una respuesta en formato JSON.
+            const res = await fetch('/products', {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest' // Header extra para robustez
+                }
+            });
+
+            if (!res.ok) throw new Error('Error al refrescar productos');
+
             inventory = await res.json();
             renderTable();
         } catch (err) {
             const tableBody = document.getElementById('inventory-table-body');
             if (tableBody) {
-                tableBody.innerHTML = `<tr><td colspan="6" class="text-center p-6 text-red-500">Error al cargar productos</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="6" class="text-center p-6 text-red-500">Error al refrescar productos</td></tr>`;
             }
+            console.error(err); // Dejamos un log del error por si acaso
         }
     };
 
-    // --- DOM Elements ---
+    // --- DOM Elements (sin cambios) ---
     const sidebar = document.getElementById('sidebar');
     const menuButton = document.getElementById('menu-button');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
     const tableBody = document.getElementById('inventory-table-body');
     const addProductBtn = document.getElementById('addProductBtn');
-    const productModal = document.getElementById('productModal');
-    const modalContent = document.getElementById('modalContent');
-    const closeModalBtn = document.getElementById('closeModal');
-    const cancelModalBtn = document.getElementById('cancelModalBtn');
     const productForm = document.getElementById('productForm');
     const modalTitle = document.getElementById('modalTitle');
 
-    // --- Responsive Sidebar Logic ---
+    // --- Logic (sin cambios) ---
     function toggleSidebar() {
         if (sidebar && sidebarOverlay) {
             sidebar.classList.toggle('-translate-x-full');
@@ -49,15 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (menuButton) menuButton.addEventListener('click', toggleSidebar);
     if (sidebarOverlay) sidebarOverlay.addEventListener('click', toggleSidebar);
 
-    // --- Modal Reutilizable Logic ---
-    const openReusableModal = (name) => {
-        window.dispatchEvent(new CustomEvent('open-modal', { detail: name }));
-    };
-    const closeReusableModal = (name) => {
-        window.dispatchEvent(new CustomEvent('close-modal', { detail: name }));
-    };
+    const openReusableModal = (name) => window.dispatchEvent(new CustomEvent('open-modal', { detail: name }));
+    const closeReusableModal = (name) => window.dispatchEvent(new CustomEvent('close-modal', { detail: name }));
 
-    // --- Functions ---
     const getStatusBadge = (stock) => {
         if (stock === 0) return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Agotado</span>';
         if (stock <= 10) return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Poco Stock</span>';
@@ -67,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderTable = () => {
         if (!tableBody) return;
         tableBody.innerHTML = '';
-        if (inventory.length === 0) {
+        if (!inventory || inventory.length === 0) {
             tableBody.innerHTML = `<tr><td colspan="6" class="text-center p-6 text-gray-500">No hay productos en el inventario.</td></tr>`;
         } else {
             inventory.forEach(product => {
@@ -75,9 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <tr id="product-${product.id}">
                         <td class="p-4 whitespace-nowrap">
                             <div class="flex items-center">
-                                <div class="flex-shrink-0 h-10 w-10">
-                                    <img src="${product.image}" alt="" class="w-10 h-10 rounded-md object-cover" onerror="this.onerror=null;this.src='https://placehold.co/100x100/e0e0e0/ffffff?text=Img';">
-                                </div>
+                                <div class="flex-shrink-0 h-10 w-10"><img src="${product.image}" alt="" class="w-10 h-10 rounded-md object-cover" onerror="this.onerror=null;this.src='https://placehold.co/100x100/e0e0e0/ffffff?text=Img';"></div>
                                 <div class="ml-4">
                                     <div class="text-sm font-medium text-gray-900">${product.name}</div>
                                     <div class="text-sm text-gray-500 lg:hidden">${product.category}</div>
@@ -92,8 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <button data-id="${product.id}" class="edit-btn text-indigo-600 hover:text-indigo-900 mr-3" aria-label="Editar"><i class="fas fa-edit fa-fw"></i></button>
                             <button data-id="${product.id}" class="delete-btn text-red-600 hover:text-red-900" aria-label="Eliminar"><i class="fas fa-trash fa-fw"></i></button>
                         </td>
-                    </tr>
-                   `;
+                    </tr>`;
                 tableBody.innerHTML += row;
             });
         }
@@ -150,20 +144,16 @@ document.addEventListener('DOMContentLoaded', () => {
             image: document.getElementById('productImage').value || 'https://placehold.co/100x100/e0e0e0/ffffff?text=Img'
         };
 
-        // ✅ CORRECCIÓN: Obtenemos el token CSRF de la etiqueta <meta> que pusimos en el layout.
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         try {
-            let res;
             const url = id ? `/products/${id}` : '/products';
             const method = id ? 'PUT' : 'POST';
-
-            res = await fetch(url, {
+            const res = await fetch(url, {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    // ✅ CORRECCIÓN: Enviamos el token CSRF correcto en la cabecera.
                     'X-CSRF-TOKEN': csrfToken,
                 },
                 body: JSON.stringify(productData)
@@ -175,45 +165,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error('Error al guardar producto');
             }
             closeReusableModal('product-modal');
-            await fetchProducts();
+            await fetchProducts(); // Refresca la tabla después de guardar
         } catch (err) {
-            alert('Error al guardar producto. Revisa la consola del navegador para más detalles.');
+            alert('Error al guardar producto. Revisa la consola del navegador.');
         }
     };
 
     const deleteProduct = async (id) => {
         if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
-            // ✅ CORRECCIÓN: Obtenemos el token CSRF también para la petición de borrado.
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             try {
                 const res = await fetch(`/products/${id}`, {
                     method: 'DELETE',
                     headers: {
                         'Accept': 'application/json',
-                        // ✅ CORRECCIÓN: Y lo enviamos aquí también.
                         'X-CSRF-TOKEN': csrfToken,
                     }
                 });
                 if (!res.ok) throw new Error('Error al eliminar producto');
-                await fetchProducts();
+                await fetchProducts(); // Refresca la tabla después de eliminar
             } catch (err) {
                 alert('Error al eliminar producto');
             }
         }
     };
 
-    const attachActionListeners = () => {
-        document.querySelectorAll('.edit-btn').forEach(button => {
-            button.removeEventListener('click', handleEditClick); // Prevenir duplicados
-            button.addEventListener('click', handleEditClick);
-        });
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.removeEventListener('click', handleDeleteClick); // Prevenir duplicados
-            button.addEventListener('click', handleDeleteClick);
-        });
-    };
-
-    // Helpers para evitar listeners duplicados
+    // --- Listeners (sin cambios) ---
     function handleEditClick(e) {
         const id = parseInt(e.currentTarget.getAttribute('data-id'));
         showEditModal(id);
@@ -223,16 +200,28 @@ document.addEventListener('DOMContentLoaded', () => {
         deleteProduct(id);
     }
 
-    // --- Event Listeners ---
-    if (addProductBtn) {
-        addProductBtn.addEventListener('click', () => {
-            showAddModal();
+    const attachActionListeners = () => {
+        document.querySelectorAll('.edit-btn').forEach(button => {
+            button.removeEventListener('click', handleEditClick);
+            button.addEventListener('click', handleEditClick);
         });
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.removeEventListener('click', handleDeleteClick);
+            button.addEventListener('click', handleDeleteClick);
+        });
+    };
+
+    if (addProductBtn) {
+        addProductBtn.addEventListener('click', () => showAddModal());
     }
+
+    const closeModalBtn = document.getElementById('closeModal');
+    const cancelModalBtn = document.getElementById('cancelModalBtn');
     if (closeModalBtn) closeModalBtn.addEventListener('click', () => closeReusableModal('product-modal'));
     if (cancelModalBtn) cancelModalBtn.addEventListener('click', () => closeReusableModal('product-modal'));
+
     if (productForm) productForm.addEventListener('submit', handleFormSubmit);
 
-    // --- Initial Load ---
-    fetchProducts();
+    // ✅ CARGA INICIAL DIRECTA:
+    renderTable();
 });

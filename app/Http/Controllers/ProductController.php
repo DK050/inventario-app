@@ -9,9 +9,19 @@ use Illuminate\Support\Facades\Validator;
 class ProductController extends Controller
 {
     // Listar productos
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(Product::all());
+        // Obtenemos todos los productos
+        $products = Product::all();
+
+        // Si la petición es AJAX (de nuestro JS), devolvemos solo el JSON
+        if ($request->wantsJson()) {
+            return response()->json($products);
+        }
+
+        // Si es una carga normal del navegador, pasamos los productos
+        // directamente a la vista del dashboard.
+        return view('dashboard', ['products' => $products]);
     }
 
     // Crear producto

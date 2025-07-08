@@ -158,6 +158,9 @@
                 </div>
             </form>
         </x-modal>
+        <script>
+            window.initialProducts = @json($products);
+        </script>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </div>
