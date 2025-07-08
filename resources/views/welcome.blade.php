@@ -17,7 +17,13 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50 text-gray-800 hide-scrollbar">
+<script>
+    // Asegura que la clase se aplique también al elemento html
+    document.addEventListener('DOMContentLoaded', function () {
+        document.documentElement.classList.add('hide-scrollbar');
+    });
+</script>
 
     <!-- Header & Navigation -->
     <header class="bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-50">
@@ -42,9 +48,9 @@
                             Ir al Dashboard
                         </a>
                     @else
-                        <a href="{{ route('login') }}" class="bg-pink-500 text-white px-4 py-2 rounded-full hover:bg-pink-600 transition-transform transform hover:scale-105">
+                        <button id="open-login-modal" type="button" class="bg-pink-500 text-white px-4 py-2 rounded-full hover:bg-pink-600 transition-transform transform hover:scale-105 focus:outline-none">
                             Iniciar Sesión
-                        </a>
+                        </button>
                     @endauth
                 @endif
             </div>
@@ -144,5 +150,84 @@
             <p class="mt-8 text-sm text-gray-400">&copy; 2024 El Rincón Creativo. Todos los derechos reservados.</p>
         </div>
     </footer>
+<!-- Login Modal -->
+<div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-8 relative">
+        <button id="close-login-modal" class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-2xl font-bold">&times;</button>
+        <h2 class="text-2xl font-bold mb-6 text-center text-pink-500">Iniciar Sesión</h2>
+        <!-- Session Status -->
+        @if (session('status'))
+            <div class="mb-4 font-medium text-sm text-green-600">
+                {{ session('status') }}
+            </div>
+        @endif
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+            <div class="mb-4">
+                <label for="email" class="block text-gray-700">Email</label>
+                <input id="email" class="block mt-1 w-full rounded border-gray-300 focus:border-pink-500 focus:ring focus:ring-pink-200 focus:ring-opacity-50" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+                @error('email')
+                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-gray-700">Contraseña</label>
+                <input id="password" class="block mt-1 w-full rounded border-gray-300 focus:border-pink-500 focus:ring focus:ring-pink-200 focus:ring-opacity-50" type="password" name="password" required autocomplete="current-password" />
+                @error('password')
+                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="flex items-center mb-4">
+                <input id="remember_me" type="checkbox" class="rounded border-gray-400 text-pink-600 shadow-sm focus:ring-pink-400" name="remember">
+                <label for="remember_me" class="ml-2 text-sm text-gray-600">Recuérdame</label>
+            </div>
+            <div class="flex items-center justify-between">
+                @if (Route::has('password.request'))
+                    <a class="underline text-sm text-gray-600 hover:text-pink-500" href="{{ route('password.request') }}">
+                        ¿Olvidaste tu contraseña?
+                    </a>
+                @endif
+                <button type="submit" class="ml-3 bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition-colors">Entrar</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const openBtn = document.getElementById('open-login-modal');
+        const closeBtn = document.getElementById('close-login-modal');
+        const modal = document.getElementById('login-modal');
+        if (openBtn && closeBtn && modal) {
+            openBtn.addEventListener('click', () => {
+                modal.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            });
+            closeBtn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            });
+            window.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    modal.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                }
+            });
+            // Cerrar modal al hacer clic fuera del contenido
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                    document.body.classList.remove('overflow-hidden');
+                }
+            });
+        }
+        // Abrir modal automáticamente si hay errores o status
+        @if ($errors->any() || session('status'))
+            if (modal) {
+                modal.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            }
+        @endif
+    });
+</script>
 </body>
 </html>
