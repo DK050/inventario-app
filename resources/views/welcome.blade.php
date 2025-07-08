@@ -29,7 +29,7 @@
     <header class="bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <!-- Logo -->
-            <a href="#" class="text-2xl font-bold text-pink-500 hover:text-pink-600 transition-colors">
+            <a href="{{ url('/') }}" class="text-2xl font-bold text-pink-500 hover:text-pink-600 transition-colors">
                 El Rincón Creativo ✨
             </a>
             <!-- Desktop Menu -->
