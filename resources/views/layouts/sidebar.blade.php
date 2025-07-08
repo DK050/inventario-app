@@ -22,10 +22,15 @@
         </a>
     </nav>
     <div class="p-4 border-t mt-auto">
-        <a href="#" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+        <form method="POST" action="{{ route('logout') }}">
+        @csrf
+            <i class="fas fa-sign-out-alt w-6 text-center text-red-600"></i>
+            <button type="submit">Cerrar sesión</button>
+        </form>
+        {{-- <a href="#" class="flex items-center px-4 py-2 text-red-600 hover:bg-gray-100 rounded-md">
             <i class="fas fa-sign-out-alt w-6 text-center"></i>
             <span class="ml-3">Cerrar Sesión</span>
-        </a>
+        </a> --}}
     </div>
     <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden hidden"></div>           
 </aside>
