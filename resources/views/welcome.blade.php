@@ -81,25 +81,25 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     <!-- Category Card 1 -->
                     <div class="bg-pink-50 rounded-lg p-6 text-center shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
-                        <img src="https://placehold.co/300x200/fecdd3/ef4444?text=Regalos" alt="Regalos Personalizados" class="w-full h-40 object-cover rounded-md mb-4 mx-auto">
+                        <img src="/imagenes/regalos.jpg" alt="Regalos Personalizados" class="w-full h-40 object-cover rounded-md mb-4 mx-auto">
                         <h3 class="text-xl font-semibold mb-2 text-pink-800">Regalos Únicos</h3>
                         <p class="text-gray-600">Sorprende a esa persona especial con detalles inolvidables.</p>
                     </div>
                     <!-- Category Card 2 -->
                     <div class="bg-blue-50 rounded-lg p-6 text-center shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
-                        <img src="https://placehold.co/300x200/bfdbfe/3b82f6?text=Papelería" alt="Papelería" class="w-full h-40 object-cover rounded-md mb-4 mx-auto">
+                        <img src="/imagenes/1.jpg" alt="Papelería" class="w-full h-40 object-cover rounded-md mb-4 mx-auto">
                         <h3 class="text-xl font-semibold mb-2 text-blue-800">Papelería Bonita</h3>
                         <p class="text-gray-600">Cuadernos, stickers y todo para organizar tus ideas con estilo.</p>
                     </div>
                     <!-- Category Card 3 -->
                     <div class="bg-yellow-50 rounded-lg p-6 text-center shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
-                        <img src="https://placehold.co/300x200/fef08a/ca8a04?text=Adornos" alt="Adornos" class="w-full h-40 object-cover rounded-md mb-4 mx-auto">
+                        <img src="/imagenes/Cumple.jpg" alt="Adornos" class="w-full h-40 object-cover rounded-md mb-4 mx-auto">
                         <h3 class="text-xl font-semibold mb-2 text-yellow-800">Adornos y Fiestas</h3>
                         <p class="text-gray-600">Dale un toque mágico a tus celebraciones y espacios.</p>
                     </div>
                     <!-- Category Card 4 -->
                     <div class="bg-green-50 rounded-lg p-6 text-center shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
-                        <img src="https://placehold.co/300x200/dcfce7/16a34a?text=Maquetas" alt="Proyectos Escolares" class="w-full h-40 object-cover rounded-md mb-4 mx-auto">
+                        <img src="/imagenes/ProEs.jpg" alt="Proyectos Escolares" class="w-full h-40 object-cover rounded-md mb-4 mx-auto">
                         <h3 class="text-xl font-semibold mb-2 text-green-800">Ayuda Escolar</h3>
                         <p class="text-gray-600">Maquetas y trabajos creativos para sacar la mejor nota.</p>
                     </div>
@@ -112,7 +112,7 @@
             <div class="container mx-auto px-6">
                 <div class="flex flex-col md:flex-row items-center bg-white rounded-xl shadow-xl overflow-hidden">
                     <div class="w-full md:w-1/2">
-                        <img src="https://placehold.co/600x400/a5b4fc/4338ca?text=Proyecto+Escolar" alt="Niña feliz con su maqueta" class="w-full h-full object-cover">
+                        <img src="/imagenes/MaquetaC.jpg" alt="Niña feliz con su maqueta" class="w-full h-full object-cover">
                     </div>
                     <div class="w-full md:w-1/2 p-8 md:p-12">
                         <h2 class="text-3xl font-bold mb-4">¿Necesitas Ayuda con una Maqueta?</h2>
