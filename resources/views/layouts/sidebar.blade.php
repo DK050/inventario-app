@@ -1,7 +1,7 @@
 {{-- resources/views/layouts/sidebar.blade.php --}}
 <aside id="sidebar" class="sidebar flex flex-col md:relative md:w-64 min-h-screen bg-white shadow-md flex-shrink-0">
     <div class="h-16 flex items-center justify-center border-b">
-        <h1 class="text-xl font-bold text-pink-500">El Rincón Creativo ✨</h1>
+        <a href="{{ url('/') }}" class="text-xl font-bold text-pink-500 hover:text-pink-600 transition-colors">El Rincón Creativo ✨</a>
     </div>
     <nav class="flex-1 pt-4">
         <a href="#" class="flex items-center px-6 py-3 text-gray-700 bg-gray-200 font-semibold">
